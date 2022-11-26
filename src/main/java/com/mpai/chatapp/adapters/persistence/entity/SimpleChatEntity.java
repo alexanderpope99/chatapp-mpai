@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @DiscriminatorValue("simple")
@@ -15,6 +16,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class SimpleChatEntity extends ChatEntity {
 
-	private String nickname;
+	private LocalDateTime startedOn;
 
 }

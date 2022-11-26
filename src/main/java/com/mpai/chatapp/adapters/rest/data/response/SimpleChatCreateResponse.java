@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -14,6 +15,8 @@ import java.util.UUID;
 public class SimpleChatCreateResponse {
 
 	private UUID id;
+
+	private LocalDateTime startedOn;
 
 	private UserModifiedResponse user1;
 

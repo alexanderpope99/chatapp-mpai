@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -11,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserSimpleChatResponse extends UserChatResponse {
 
-	private String nickname;
+	private LocalDateTime startedOn;
 
 	private UserModifiedResponse user1;
 

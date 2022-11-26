@@ -159,7 +159,7 @@ public class ChatPersistenceAdapter implements ChatOutputPort {
 			if (chatEntity.getClass().equals(SimpleChatEntity.class)) {
 				SimpleChatEntity simpleChatEntity = simpleChatRepository.findById(chatEntity.getId()).get();
 				SimpleChat simpleChat = new SimpleChat(
-						simpleChatEntity.getNickname(),
+						simpleChatEntity.getStartedOn(),
 						userPersistenceMapper.toUser(simpleChatEntity.getUsers().iterator().next()),
 						userPersistenceMapper.toUser(simpleChatEntity.getUsers().iterator().next()));
 				simpleChat.setId(simpleChatEntity.getId());

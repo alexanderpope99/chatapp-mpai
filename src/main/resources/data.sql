@@ -4,8 +4,8 @@ INSERT INTO users (id, nickname, password, role, username) VALUES ('fd1e4dfb-94c
 INSERT INTO users (id, nickname, password, role, username) VALUES ('8cb78597-4814-4543-8c54-94ec43f302f9', 'Gigi4', '$2a$10$klbQ2m.muSkgzuHjj90e9uY/qDu5flm2XX0MXb9pk6c4/eHtkDc1q', 'ROLE_USER', 'gigi4');
 INSERT INTO users (id, nickname, password, role, username) VALUES ('d38a3cb9-01c6-47cb-bf6f-9bd96461b17b', 'Gigi5', '$2a$10$1qvWs/M1XR.D5lNxmXIWEuIjgOutmkdoBLgnK9HB86QR3dUATo3WS', 'ROLE_USER', 'gigi5');
 
-INSERT INTO chats (chat_type, id, name, nickname, admin_id) VALUES ('simple', '2eb506ad-dcae-43b4-80bf-b18404dcdd56', null, null, null);
-INSERT INTO chats (chat_type, id, name, nickname, admin_id) VALUES ('group', 'a1a4b470-0661-4dd7-be04-61fd3d544f1a', 'Group 1', null, '6d74a125-8bbf-4f93-ada8-97ffaff7b815');
+INSERT INTO chats (chat_type, id, name, started_on, admin_id) VALUES ('simple', '2eb506ad-dcae-43b4-80bf-b18404dcdd56', null, '2022-11-25 21:19:57.122712', null);
+INSERT INTO chats (chat_type, id, name, started_on, admin_id) VALUES ('group', 'a1a4b470-0661-4dd7-be04-61fd3d544f1a', 'Group 1', null, '6d74a125-8bbf-4f93-ada8-97ffaff7b815');
 
 INSERT INTO users_chats (chat_id, user_id) VALUES ('2eb506ad-dcae-43b4-80bf-b18404dcdd56', '6d74a125-8bbf-4f93-ada8-97ffaff7b815');
 INSERT INTO users_chats (chat_id, user_id) VALUES ('2eb506ad-dcae-43b4-80bf-b18404dcdd56', '4801c99e-ead6-45a4-b5b7-cb9b759c6d39');

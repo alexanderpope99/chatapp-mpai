@@ -54,7 +54,7 @@ public class UserChatResponseBuilderVisitorImpl implements UserChatResponseBuild
 		UserSimpleChatResponse response =
 				new UserSimpleChatResponse();
 		response.setId(simpleChat.getId());
-		response.setNickname(simpleChat.getNickname());
+		response.setStartedOn(simpleChat.getStartedOn());
 
 		UserModifiedResponse userResponse1 = new UserModifiedResponse();
 		userResponse1.setId(simpleChat.getUser1().getId());

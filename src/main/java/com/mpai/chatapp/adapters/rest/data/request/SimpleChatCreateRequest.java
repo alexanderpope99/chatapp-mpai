@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 public class SimpleChatCreateRequest {
 
-	private String nickname;
+	private LocalDateTime startedOn;
 
 	private String initialUsername;
 
