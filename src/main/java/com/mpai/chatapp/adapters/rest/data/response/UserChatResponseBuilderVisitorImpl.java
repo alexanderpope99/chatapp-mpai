@@ -1,6 +1,9 @@
 package com.mpai.chatapp.adapters.rest.data.response;
 
-import com.mpai.chatapp.domain.model.*;
+import com.mpai.chatapp.domain.model.GroupChat;
+import com.mpai.chatapp.domain.model.Message;
+import com.mpai.chatapp.domain.model.SimpleChat;
+import com.mpai.chatapp.domain.model.User;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,6 +22,8 @@ public class UserChatResponseBuilderVisitorImpl implements UserChatResponseBuild
 		Set<UserResponse> usersResponse = new HashSet<>();
 
 		for (User user : groupChat.getUsers()) {
+			if (user.getUsername().equals(username))
+				continue;
 			UserResponse userResponse = new UserResponse();
 			userResponse.setId(user.getId());
 			userResponse.setUsername(user.getUsername());
@@ -56,18 +61,12 @@ public class UserChatResponseBuilderVisitorImpl implements UserChatResponseBuild
 		response.setId(simpleChat.getId());
 		response.setStartedOn(simpleChat.getStartedOn());
 
-		UserModifiedResponse userResponse1 = new UserModifiedResponse();
-		userResponse1.setId(simpleChat.getUser1().getId());
-		userResponse1.setUsername(simpleChat.getUser1().getUsername());
-		userResponse1.setNickname(simpleChat.getUser1().getNickname());
+		UserModifiedResponse receiver = new UserModifiedResponse();
+		receiver.setId(simpleChat.getUser2().getId());
+		receiver.setUsername(simpleChat.getUser2().getUsername());
+		receiver.setNickname(simpleChat.getUser2().getNickname());
 
-		UserModifiedResponse userResponse2 = new UserModifiedResponse();
-		userResponse2.setId(simpleChat.getUser2().getId());
-		userResponse2.setUsername(simpleChat.getUser2().getUsername());
-		userResponse2.setNickname(simpleChat.getUser2().getNickname());
-
-		response.setUser1(userResponse1);
-		response.setUser2(userResponse2);
+		response.setReceiver(receiver);
 
 		List<MessageResponse> messagesResponse = new ArrayList<>();
 

@@ -14,9 +14,7 @@ public class UserSimpleChatResponse extends UserChatResponse {
 
 	private LocalDateTime startedOn;
 
-	private UserModifiedResponse user1;
-
-	private UserModifiedResponse user2;
+	private UserModifiedResponse receiver;
 
 	private List<MessageResponse> messages;
 

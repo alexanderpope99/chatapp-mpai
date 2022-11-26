@@ -169,16 +169,18 @@ public class ChatPersistenceAdapter implements ChatOutputPort {
 				chats.add(simpleChat);
 			} else {
 				GroupChatEntity groupChatEntity = groupChatRepository.findById(chatEntity.getId()).get();
-				Set<User> users = new HashSet<>();
-				for(UserEntity searchedUserEntity : groupChatEntity.getUsers())
-					users.add(userPersistenceMapper.toUser(searchedUserEntity));
-				GroupChat groupChat = new GroupChat(groupChatEntity.getName(),
-						userPersistenceMapper.toUser(groupChatEntity.getAdmin()), users);
-				groupChat.setId(groupChatEntity.getId());
-				for (MessageEntity messageEntity : groupChatEntity.getMessages())
-					messages.add(messagePersistenceMapper.toMessage(messageEntity));
-				groupChat.setChatHistory(messages);
-				chats.add(groupChat);
+				if (!groupChatEntity.getAdmin().getUsername().equals(username)) {
+					Set<User> users = new HashSet<>();
+					for (UserEntity searchedUserEntity : groupChatEntity.getUsers())
+						users.add(userPersistenceMapper.toUser(searchedUserEntity));
+					GroupChat groupChat = new GroupChat(groupChatEntity.getName(),
+							userPersistenceMapper.toUser(groupChatEntity.getAdmin()), users);
+					groupChat.setId(groupChatEntity.getId());
+					for (MessageEntity messageEntity : groupChatEntity.getMessages())
+						messages.add(messagePersistenceMapper.toMessage(messageEntity));
+					groupChat.setChatHistory(messages);
+					chats.add(groupChat);
+				}
 			}
 		}
 
@@ -196,17 +198,17 @@ public class ChatPersistenceAdapter implements ChatOutputPort {
 
 		for (ChatEntity chatEntity : userEntity.get().getAdministeredGroupChats()) {
 			List<Message> messages = new ArrayList<>();
-				GroupChatEntity groupChatEntity = groupChatRepository.findById(chatEntity.getId()).get();
-				Set<User> users = new HashSet<>();
-				for(UserEntity searchedUserEntity : groupChatEntity.getUsers())
-					users.add(userPersistenceMapper.toUser(searchedUserEntity));
-				GroupChat groupChat = new GroupChat(groupChatEntity.getName(),
-						userPersistenceMapper.toUser(groupChatEntity.getAdmin()), users);
-				groupChat.setId(groupChatEntity.getId());
-				for (MessageEntity messageEntity : groupChatEntity.getMessages())
-					messages.add(messagePersistenceMapper.toMessage(messageEntity));
-				groupChat.setChatHistory(messages);
-				chats.add(groupChat);
+			GroupChatEntity groupChatEntity = groupChatRepository.findById(chatEntity.getId()).get();
+			Set<User> users = new HashSet<>();
+			for (UserEntity searchedUserEntity : groupChatEntity.getUsers())
+				users.add(userPersistenceMapper.toUser(searchedUserEntity));
+			GroupChat groupChat = new GroupChat(groupChatEntity.getName(),
+					userPersistenceMapper.toUser(groupChatEntity.getAdmin()), users);
+			groupChat.setId(groupChatEntity.getId());
+			for (MessageEntity messageEntity : groupChatEntity.getMessages())
+				messages.add(messagePersistenceMapper.toMessage(messageEntity));
+			groupChat.setChatHistory(messages);
+			chats.add(groupChat);
 		}
 
 		return chats;
