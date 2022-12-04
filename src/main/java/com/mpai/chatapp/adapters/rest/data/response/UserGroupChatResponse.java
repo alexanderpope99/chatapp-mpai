@@ -6,17 +6,20 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class UserGroupChatResponse extends UserChatResponse {
 
+	private String type = "group";
+
 	private String name;
 
-	private boolean isAdmin;
+	private String avatar;
 
-	private Set<UserResponse> users;
+	private Set<UUID> admins;
 
 	private List<MessageResponse> messages;
 

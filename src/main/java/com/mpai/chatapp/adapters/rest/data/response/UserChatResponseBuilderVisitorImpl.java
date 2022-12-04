@@ -5,46 +5,57 @@ import com.mpai.chatapp.domain.model.Message;
 import com.mpai.chatapp.domain.model.SimpleChat;
 import com.mpai.chatapp.domain.model.User;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class UserChatResponseBuilderVisitorImpl implements UserChatResponseBuilderVisitor {
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
 	@Override
 	public UserGroupChatResponse visitGroupChat(GroupChat groupChat, String username) {
 		UserGroupChatResponse response =
 				new UserGroupChatResponse();
 		response.setId(groupChat.getId());
 		response.setName(groupChat.getName());
-		response.setAdmin(groupChat.getAdmin().getUsername().equals(username));
+		response.setAvatar("https://upload.wikimedia.org/wikipedia/commons/f/f7/Facebook_default_male_avatar.gif");
 
 		Set<UserResponse> usersResponse = new HashSet<>();
 
-		for (User user : groupChat.getUsers()) {
-			if (user.getUsername().equals(username))
-				continue;
+		Set<User> allUsers = groupChat.getUsers();
+		allUsers.add(groupChat.getAdmin());
+
+		for (User user : allUsers) {
 			UserResponse userResponse = new UserResponse();
 			userResponse.setId(user.getId());
 			userResponse.setUsername(user.getUsername());
-			userResponse.setNickname(user.getNickname());
-			userResponse.setAdmin(user.getUsername().equals(groupChat.getAdmin().getUsername()));
+			userResponse.setFirstName(user.getFirstName());
+			userResponse.setLastName(user.getLastName());
+			userResponse.setLastSeen(user.getLastSeen().format(formatter));
+			userResponse.setAvatar(user.getAvatar());
 			usersResponse.add(userResponse);
 		}
 
-		response.setUsers(usersResponse);
+		response.setContacts(usersResponse);
+
+		Set<UUID> admins = new HashSet<>();
+		admins.add(groupChat.getAdmin().getId());
+		response.setAdmins(admins);
 
 		List<MessageResponse> messagesResponse = new ArrayList<>();
 
 		for (Message message : groupChat.getChatHistory()) {
 			MessageResponse messageResponse = new MessageResponse();
+			messageResponse.setId(message.getId());
 			messageResponse.setContent(message.getContent());
-			messageResponse.setDateTime(message.getDateTime());
+			messageResponse.setDate(message.getDate().format(formatter));
 			UserModifiedResponse userResponse = new UserModifiedResponse();
 			User sender = message.getSender();
 			userResponse.setId(sender.getId());
 			userResponse.setUsername(sender.getUsername());
-			userResponse.setNickname(sender.getNickname());
+			userResponse.setFirstName(sender.getFirstName());
+			userResponse.setLastName(sender.getLastName());
+			userResponse.setLastSeen(sender.getLastSeen());
+			userResponse.setAvatar(sender.getAvatar());
 			messageResponse.setSender(userResponse);
 			messagesResponse.add(messageResponse);
 		}
@@ -59,26 +70,45 @@ public class UserChatResponseBuilderVisitorImpl implements UserChatResponseBuild
 		UserSimpleChatResponse response =
 				new UserSimpleChatResponse();
 		response.setId(simpleChat.getId());
-		response.setStartedOn(simpleChat.getStartedOn());
 
-		UserModifiedResponse receiver = new UserModifiedResponse();
+		Set<UserResponse> usersResponse = new HashSet<>();
+
+
+		UserResponse chatSender = new UserResponse();
+		chatSender.setId(simpleChat.getUser1().getId());
+		chatSender.setUsername(simpleChat.getUser1().getUsername());
+		chatSender.setFirstName(simpleChat.getUser1().getFirstName());
+		chatSender.setLastName(simpleChat.getUser1().getLastName());
+		chatSender.setLastSeen(simpleChat.getUser1().getLastSeen().format(formatter));
+		chatSender.setAvatar(simpleChat.getUser1().getAvatar());
+		usersResponse.add(chatSender);
+
+		UserResponse receiver = new UserResponse();
 		receiver.setId(simpleChat.getUser2().getId());
 		receiver.setUsername(simpleChat.getUser2().getUsername());
-		receiver.setNickname(simpleChat.getUser2().getNickname());
+		receiver.setFirstName(simpleChat.getUser2().getFirstName());
+		receiver.setLastName(simpleChat.getUser2().getLastName());
+		receiver.setLastSeen(simpleChat.getUser2().getLastSeen().format(formatter));
+		receiver.setAvatar(simpleChat.getUser2().getAvatar());
+		usersResponse.add(receiver);
 
-		response.setReceiver(receiver);
+		response.setContacts(usersResponse);
 
 		List<MessageResponse> messagesResponse = new ArrayList<>();
 
 		for (Message message : simpleChat.getChatHistory()) {
 			MessageResponse messageResponse = new MessageResponse();
+			messageResponse.setId(message.getId());
 			messageResponse.setContent(message.getContent());
-			messageResponse.setDateTime(message.getDateTime());
+			messageResponse.setDate(message.getDate().format(formatter));
 			UserModifiedResponse userResponse = new UserModifiedResponse();
 			User sender = message.getSender();
 			userResponse.setId(sender.getId());
 			userResponse.setUsername(sender.getUsername());
-			userResponse.setNickname(sender.getNickname());
+			userResponse.setFirstName(sender.getLastName());
+			userResponse.setLastName(sender.getLastName());
+			userResponse.setLastSeen(sender.getLastSeen());
+			userResponse.setAvatar(sender.getAvatar());
 			messageResponse.setSender(userResponse);
 			messagesResponse.add(messageResponse);
 		}

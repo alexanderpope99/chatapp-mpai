@@ -66,10 +66,13 @@ public class ChatService implements
 
 		chat.sendMessage(message);
 
-		if (chat instanceof GroupChat)
+		if (chat instanceof GroupChat) {
 			return chatOutputPort.saveGroupChat((GroupChat) chat);
-		else
-			return chatOutputPort.saveSimpleChat((SimpleChat) chat);
+		}
+		else {
+			SimpleChat simpleChat = chatOutputPort.saveSimpleChat((SimpleChat) chat);
+			return simpleChat;
+		}
 	}
 
 	@Override

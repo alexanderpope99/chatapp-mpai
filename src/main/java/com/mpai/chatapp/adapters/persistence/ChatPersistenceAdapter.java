@@ -45,10 +45,26 @@ public class ChatPersistenceAdapter implements ChatOutputPort {
 		if (!chatEntity.isPresent())
 			throw new ChatNotFoundException("Chat not found");
 
-		if (chatEntity.get().getClass().equals(GroupChatEntity.class))
-			return groupChatPersistenceMapper.toGroupChat(groupChatRepository.findById(id).get());
-		else
-			return simpleChatPersistenceMapper.toSimpleChat(simpleChatRepository.findById(id).get());
+		if (chatEntity.get().getClass().equals(GroupChatEntity.class)) {
+			GroupChat groupChat = groupChatPersistenceMapper.toGroupChat(groupChatRepository.findById(id).get());
+			groupChat.setId(chatEntity.get().getId());
+			List<Message> chatHistory = new ArrayList<>();
+			for (MessageEntity messageEntity : chatEntity.get().getMessages())
+				chatHistory.add(messagePersistenceMapper.toMessage(messageEntity));
+			groupChat.setChatHistory(chatHistory);
+			return groupChat;
+		} else {
+			SimpleChat simpleChat = simpleChatPersistenceMapper.toSimpleChat(simpleChatRepository.findById(id).get());
+			simpleChat.setId(chatEntity.get().getId());
+			List<Message> chatHistory = new ArrayList<>();
+			for (MessageEntity messageEntity : chatEntity.get().getMessages())
+				chatHistory.add(messagePersistenceMapper.toMessage(messageEntity));
+			simpleChat.setChatHistory(chatHistory);
+			Iterator<UserEntity> iterator = chatEntity.get().getUsers().iterator();
+			simpleChat.setUser1(userPersistenceMapper.toUser(iterator.next()));
+			simpleChat.setUser2(userPersistenceMapper.toUser(iterator.next()));
+			return simpleChat;
+		}
 	}
 
 
@@ -82,13 +98,13 @@ public class ChatPersistenceAdapter implements ChatOutputPort {
 			if (message.getId() == null) {
 				messageEntity = new MessageEntity();
 				messageEntity.setSender(userPersistenceMapper.toUserEntity(message.getSender()));
-				messageEntity.setDateTime(message.getDateTime());
+				messageEntity.setDate(message.getDate());
 				messageEntity.setContent(message.getContent());
 				messageEntity.setChat(simpleChatEntity);
 			} else
 				messageEntity = messageRepository.findById(message.getId()).get();
+			messageEntity = messageRepository.save(messageEntity);
 			messageEntities.add(messageEntity);
-			messageRepository.save(messageEntity);
 		}
 
 		simpleChatEntity.setUsers(userEntities);
@@ -96,10 +112,16 @@ public class ChatPersistenceAdapter implements ChatOutputPort {
 
 		simpleChatEntity = simpleChatRepository.save(simpleChatEntity);
 
-		simpleChat.setId(simpleChatEntity.getId());
-		simpleChat.setChatHistory(simpleChat.getChatHistory());
-
-		return simpleChat;
+		SimpleChat newSimpleChat = simpleChatPersistenceMapper.toSimpleChat(simpleChatRepository.findById(simpleChatEntity.getId()).get());
+		newSimpleChat.setId(simpleChatEntity.getId());
+		List<Message> chatHistory = new ArrayList<>();
+		for (MessageEntity messageEntity : simpleChatEntity.getMessages())
+			chatHistory.add(messagePersistenceMapper.toMessage(messageEntity));
+		newSimpleChat.setChatHistory(chatHistory);
+		Iterator<UserEntity> iterator = simpleChatEntity.getUsers().iterator();
+		newSimpleChat.setUser1(userPersistenceMapper.toUser(iterator.next()));
+		newSimpleChat.setUser2(userPersistenceMapper.toUser(iterator.next()));
+		return newSimpleChat;
 	}
 
 
@@ -123,13 +145,13 @@ public class ChatPersistenceAdapter implements ChatOutputPort {
 			if (message.getId() == null) {
 				messageEntity = new MessageEntity();
 				messageEntity.setSender(userPersistenceMapper.toUserEntity(message.getSender()));
-				messageEntity.setDateTime(message.getDateTime());
+				messageEntity.setDate(message.getDate());
 				messageEntity.setContent(message.getContent());
 				messageEntity.setChat(groupChatEntity);
 			} else
 				messageEntity = messageRepository.findById(message.getId()).get();
+			messageEntity = messageRepository.save(messageEntity);
 			messageEntities.add(messageEntity);
-			messageRepository.save(messageEntity);
 		}
 
 		groupChatEntity.setUsers(userEntities);
@@ -139,9 +161,13 @@ public class ChatPersistenceAdapter implements ChatOutputPort {
 
 		groupChatEntity = groupChatRepository.save(groupChatEntity);
 
-		groupChat.setId(groupChatEntity.getId());
-
-		return groupChat;
+		GroupChat newGroupChat = groupChatPersistenceMapper.toGroupChat(groupChatRepository.findById(groupChatEntity.getId()).get());
+		newGroupChat.setId(groupChatEntity.getId());
+		List<Message> chatHistory = new ArrayList<>();
+		for (MessageEntity messageEntity : groupChatEntity.getMessages())
+			chatHistory.add(messagePersistenceMapper.toMessage(messageEntity));
+		newGroupChat.setChatHistory(chatHistory);
+		return newGroupChat;
 
 	}
 
@@ -158,10 +184,11 @@ public class ChatPersistenceAdapter implements ChatOutputPort {
 			List<Message> messages = new ArrayList<>();
 			if (chatEntity.getClass().equals(SimpleChatEntity.class)) {
 				SimpleChatEntity simpleChatEntity = simpleChatRepository.findById(chatEntity.getId()).get();
+				Iterator<UserEntity> iterator = simpleChatEntity.getUsers().iterator();
 				SimpleChat simpleChat = new SimpleChat(
 						simpleChatEntity.getStartedOn(),
-						userPersistenceMapper.toUser(simpleChatEntity.getUsers().iterator().next()),
-						userPersistenceMapper.toUser(simpleChatEntity.getUsers().iterator().next()));
+						userPersistenceMapper.toUser(iterator.next()),
+						userPersistenceMapper.toUser(iterator.next()));
 				simpleChat.setId(simpleChatEntity.getId());
 				for (MessageEntity messageEntity : simpleChatEntity.getMessages())
 					messages.add(messagePersistenceMapper.toMessage(messageEntity));

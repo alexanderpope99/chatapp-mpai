@@ -1,19 +1,20 @@
-INSERT INTO users (id, nickname, password, role, username) VALUES ('6d74a125-8bbf-4f93-ada8-97ffaff7b815', 'Gigi', '$2a$10$WW7D1FOv62F1mAU5.TIg8.otTrnvcZZsiucexMVX9XHJGNcRYPi4S', 'ROLE_USER', 'gigi');
-INSERT INTO users (id, nickname, password, role, username) VALUES ('4801c99e-ead6-45a4-b5b7-cb9b759c6d39', 'Gigi2', '$2a$10$Fn.LVXvfhz4GsSPRQ1nGO.eU7bGclvSaLifRdK4Bj0hPmcla61CWa', 'ROLE_USER', 'gigi2');
-INSERT INTO users (id, nickname, password, role, username) VALUES ('fd1e4dfb-94c0-456f-8224-e654505664bc', 'Gigi3', '$2a$10$rSf4UrBE81g6AFK6/eO.Y.rOE2wQP5TPCviOnrH28SRs/hnt7GG26', 'ROLE_USER', 'gigi3');
-INSERT INTO users (id, nickname, password, role, username) VALUES ('8cb78597-4814-4543-8c54-94ec43f302f9', 'Gigi4', '$2a$10$klbQ2m.muSkgzuHjj90e9uY/qDu5flm2XX0MXb9pk6c4/eHtkDc1q', 'ROLE_USER', 'gigi4');
-INSERT INTO users (id, nickname, password, role, username) VALUES ('d38a3cb9-01c6-47cb-bf6f-9bd96461b17b', 'Gigi5', '$2a$10$1qvWs/M1XR.D5lNxmXIWEuIjgOutmkdoBLgnK9HB86QR3dUATo3WS', 'ROLE_USER', 'gigi5');
+INSERT INTO users (id, avatar, first_name, last_name, last_seen, password, role, username) VALUES ('c04b7e88-0234-4aa0-9c05-aeeaf624fd72', 'https://scontent.fotp3-2.fna.fbcdn.net/v/t39.30808-6/249204848_2467267776737413_8105701682214449482_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=oFIsdfE6y0YAX_xPnvT&tn=SwMMsW2MNoU8cga-&_nc_ht=scontent.fotp3-2.fna&oh=00_AfCjEkb9RWjxHkMX2A_pDlzaiA1gWAMcJk5Xi8P8qlA4MQ&oe=638FA487', 'Alexandru', 'Pop', '2022-12-03T12:40:21.207321', '$2a$10$WzVFb2zGTKuxKS8Q6WkmVeTWf.3A68EZ3WM7/Fml7aJy0ek6s/l6W', 'ROLE_USER', 'alexandrupop');
+INSERT INTO users (id, avatar, first_name, last_name, last_seen, password, role, username) VALUES ('42f26fe9-481c-4c00-852a-d9b674fc162c', 'https://scontent.fotp3-2.fna.fbcdn.net/v/t1.18169-9/10178025_591959094313641_9182246845800778263_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=EKc4Artp_tIAX-Mfunv&_nc_ht=scontent.fotp3-2.fna&oh=00_AfAAVggB13hN8QvbqbAbCWvrL1PasrlRRs71zcqtXGhrrA&oe=63B2826D', 'Teodora', 'Orzan', '2022-12-03T12:41:07.253143', '$2a$10$OZUEttIjH.MbtZSpv9RsXuNsvHShfIkpvIrGLqISHGast.tylz1Zy', 'ROLE_USER', 'teodoraorzan');
+INSERT INTO users (id, avatar, first_name, last_name, last_seen, password, role, username) VALUES ('6c9db9b8-f5e2-40df-ab80-38854cd8be87', 'https://scontent.fotp3-2.fna.fbcdn.net/v/t1.18169-9/13466539_969196253201350_1813197929337959475_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=787_P84G_T4AX-uF61V&tn=SwMMsW2MNoU8cga-&_nc_ht=scontent.fotp3-2.fna&oh=00_AfBKNvu0xaFuPalVc9CwU5jAC6fCKaMF22aFmgU-kbNtLA&oe=63B28249', 'Andy-Constantin', 'Lupu', '2022-12-03T12:41:26.365738', '$2a$10$GfpHag1KcDZcEFyf5a8ZnuOkBDFP.66dpbtFMwRn46m/SNQiBPIAq', 'ROLE_USER', 'andylupu');
+INSERT INTO users (id, avatar, first_name, last_name, last_seen, password, role, username) VALUES ('d5d3589a-fa31-4133-afc9-1e2f876803f4', 'https://scontent.fotp3-1.fna.fbcdn.net/v/t39.30808-6/316086364_3383741135195061_2828847930780420414_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=mzp-Lu_lbegAX-sp5is&_nc_ht=scontent.fotp3-1.fna&oh=00_AfBQQcdDFMTpo3gHtVyNBSTj4VFsooOZl9poPs5TVeAyoQ&oe=6390FDD6', 'Andrei-Valentin', 'Ilie', '2022-12-03T12:41:58.934548', '$2a$10$5n5CG.rgmMkyHcNgf5vuLecdTtsMowduLRXcc5iZBLk0cn2KNCj3m', 'ROLE_USER', 'andreiilie');
 
-INSERT INTO chats (chat_type, id, name, started_on, admin_id) VALUES ('simple', '2eb506ad-dcae-43b4-80bf-b18404dcdd56', null, '2022-11-25 21:19:57.122712', null);
-INSERT INTO chats (chat_type, id, name, started_on, admin_id) VALUES ('group', 'a1a4b470-0661-4dd7-be04-61fd3d544f1a', 'Group 1', null, '6d74a125-8bbf-4f93-ada8-97ffaff7b815');
+INSERT INTO USERS_CONTACTS(user_id, contact_id) VALUES('c04b7e88-0234-4aa0-9c05-aeeaf624fd72','6c9db9b8-f5e2-40df-ab80-38854cd8be87');
+INSERT INTO USERS_CONTACTS(user_id, contact_id) VALUES('c04b7e88-0234-4aa0-9c05-aeeaf624fd72','42f26fe9-481c-4c00-852a-d9b674fc162c');
+INSERT INTO USERS_CONTACTS(user_id, contact_id) VALUES('c04b7e88-0234-4aa0-9c05-aeeaf624fd72','d5d3589a-fa31-4133-afc9-1e2f876803f4');
 
-INSERT INTO users_chats (chat_id, user_id) VALUES ('2eb506ad-dcae-43b4-80bf-b18404dcdd56', '6d74a125-8bbf-4f93-ada8-97ffaff7b815');
-INSERT INTO users_chats (chat_id, user_id) VALUES ('2eb506ad-dcae-43b4-80bf-b18404dcdd56', '4801c99e-ead6-45a4-b5b7-cb9b759c6d39');
-INSERT INTO users_chats (chat_id, user_id) VALUES ('a1a4b470-0661-4dd7-be04-61fd3d544f1a', '6d74a125-8bbf-4f93-ada8-97ffaff7b815');
-INSERT INTO users_chats (chat_id, user_id) VALUES ('a1a4b470-0661-4dd7-be04-61fd3d544f1a', '8cb78597-4814-4543-8c54-94ec43f302f9');
-INSERT INTO users_chats (chat_id, user_id) VALUES ('a1a4b470-0661-4dd7-be04-61fd3d544f1a', 'fd1e4dfb-94c0-456f-8224-e654505664bc');
-INSERT INTO users_chats (chat_id, user_id) VALUES ('a1a4b470-0661-4dd7-be04-61fd3d544f1a', 'd38a3cb9-01c6-47cb-bf6f-9bd96461b17b');
+INSERT INTO chats (chat_type, id, name, started_on, admin_id) VALUES ('simple', '8066b571-f121-40c2-b74b-30c4318fd2c7', null, null, null);
+INSERT INTO chats (chat_type, id, name, started_on, admin_id) VALUES ('group', '3a96ec7f-4ff6-4926-a17f-e1b092601aa6', 'Grup MPAI', null, 'c04b7e88-0234-4aa0-9c05-aeeaf624fd72');
 
-INSERT INTO messages (id, content, date_time, chat_id, sender_id) VALUES ('72e79d2f-a419-418c-bd30-01ff07ac1e64', 'Buna', '2022-11-26 21:19:57.122712', '2eb506ad-dcae-43b4-80bf-b18404dcdd56', '6d74a125-8bbf-4f93-ada8-97ffaff7b815');
-INSERT INTO messages (id, content, date_time, chat_id, sender_id) VALUES ('674ed905-8eb2-46c1-a708-b68ed1047404', 'Buna', '2022-11-26 21:20:16.031282', 'a1a4b470-0661-4dd7-be04-61fd3d544f1a', '6d74a125-8bbf-4f93-ada8-97ffaff7b815');
-INSERT INTO messages (id, content, date_time, chat_id, sender_id) VALUES ('b5c795ac-cb01-435a-a6e8-24606cd12df1', 'Salut', '2022-11-26 21:20:26.173262', 'a1a4b470-0661-4dd7-be04-61fd3d544f1a', '6d74a125-8bbf-4f93-ada8-97ffaff7b815');
+INSERT INTO users_chats (chat_id, user_id) VALUES ('8066b571-f121-40c2-b74b-30c4318fd2c7', 'c04b7e88-0234-4aa0-9c05-aeeaf624fd72');
+INSERT INTO users_chats (chat_id, user_id) VALUES ('8066b571-f121-40c2-b74b-30c4318fd2c7', '42f26fe9-481c-4c00-852a-d9b674fc162c');
+INSERT INTO users_chats (chat_id, user_id) VALUES ('3a96ec7f-4ff6-4926-a17f-e1b092601aa6', '6c9db9b8-f5e2-40df-ab80-38854cd8be87');
+INSERT INTO users_chats (chat_id, user_id) VALUES ('3a96ec7f-4ff6-4926-a17f-e1b092601aa6', '42f26fe9-481c-4c00-852a-d9b674fc162c');
+INSERT INTO users_chats (chat_id, user_id) VALUES ('3a96ec7f-4ff6-4926-a17f-e1b092601aa6', 'd5d3589a-fa31-4133-afc9-1e2f876803f4');
+
+INSERT INTO messages (id, content, date, chat_id, sender_id) VALUES ('1b0b3f99-a74e-415c-a309-662b80b8de21', 'Buna Teodora', '2022-12-03 12:43:37.823174', '8066b571-f121-40c2-b74b-30c4318fd2c7', 'c04b7e88-0234-4aa0-9c05-aeeaf624fd72');
+INSERT INTO messages (id, content, date, chat_id, sender_id) VALUES ('554e1ba4-4736-460f-ad60-437924228509', 'Salutare tuturor', '2022-12-03 12:44:18.074102', '3a96ec7f-4ff6-4926-a17f-e1b092601aa6', 'c04b7e88-0234-4aa0-9c05-aeeaf624fd72');

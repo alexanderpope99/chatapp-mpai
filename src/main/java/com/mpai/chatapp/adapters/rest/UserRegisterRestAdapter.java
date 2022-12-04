@@ -11,7 +11,6 @@ import com.mpai.chatapp.domain.model.User;
 import com.mpai.chatapp.ports.input.LoginUserUseCase;
 import com.mpai.chatapp.ports.input.RegisterUserUseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,7 +51,7 @@ public class UserRegisterRestAdapter {
 	}
 
 	@PostMapping(value = "/login")
-	public ResponseEntity<UserModifiedResponse> loginUser(@RequestBody @Valid UserLoginRequest userLoginRequest, final HttpServletRequest request) {
+	public ResponseEntity<UserLoginResponse> loginUser(@RequestBody @Valid UserLoginRequest userLoginRequest, final HttpServletRequest request) {
 		User user = userRestMapper.toUser(userLoginRequest);
 
 		Authentication authentication = authenticationManager.authenticate(
@@ -62,12 +61,12 @@ public class UserRegisterRestAdapter {
 
 		user = loginUserUseCase.loginUser(user);
 
+		UserLoginResponse userLoginResponse = userRestMapper.toUserLoginResponse(user);
+
+		userLoginResponse.setToken(jwtUtils.generateJwtToken(authentication));
+
 		return ResponseEntity.ok()
-				.header(
-						HttpHeaders.AUTHORIZATION,
-						jwtUtils.generateJwtToken(authentication)
-				)
-				.body(userRestMapper.toUserModifiedResponse(user));
+				.body(userLoginResponse);
 	}
 
 }

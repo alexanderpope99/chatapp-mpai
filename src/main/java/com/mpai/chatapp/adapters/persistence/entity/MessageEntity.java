@@ -31,7 +31,7 @@ public class MessageEntity {
 	@JoinColumn(name="sender_id", nullable=false)
 	private UserEntity sender;
 
-	private LocalDateTime dateTime;
+	private LocalDateTime date;
 
 	private String content;
 

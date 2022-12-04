@@ -12,12 +12,12 @@ public class Message {
 
 	private UUID id;
 	private User sender;
-	private LocalDateTime dateTime;
+	private LocalDateTime date;
 	private String content;
 
-	public Message(User sender, LocalDateTime dateTime, String content) {
+	public Message(User sender, LocalDateTime date, String content) {
 		this.sender = sender;
-		this.dateTime = dateTime;
+		this.date = date;
 		this.content = content;
 	}
 
@@ -26,7 +26,7 @@ public class Message {
 	}
 
 	public LocalDateTime getDate() {
-		return dateTime;
+		return date;
 	}
 
 	public String getContent() {

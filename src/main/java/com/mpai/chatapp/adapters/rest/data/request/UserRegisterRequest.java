@@ -16,8 +16,11 @@ public class UserRegisterRequest {
 	@NotEmpty(message = "Username may not be empty")
 	private String username;
 
-	@NotEmpty(message = "Nickname may not be empty")
-	private String nickname;
+	@NotEmpty(message = "First Name may not be empty")
+	private String firstName;
+
+	@NotEmpty(message = "Last Name may not be empty")
+	private String lastName;
 
 	@NotEmpty(message = "Password may not be empty")
 	private String password;

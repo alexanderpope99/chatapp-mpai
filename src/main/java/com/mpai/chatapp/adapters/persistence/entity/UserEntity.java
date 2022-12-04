@@ -29,9 +29,16 @@ public class UserEntity {
 	@Column(unique = true)
 	private String username;
 
-	private String nickname;
+	private String firstName;
+
+	private String lastName;
 
 	private String password;
+
+	private String lastSeen;
+
+	@Column(columnDefinition = "TEXT")
+	private String avatar;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
@@ -42,6 +49,15 @@ public class UserEntity {
 	@OneToMany(mappedBy = "admin")
 	private List<GroupChatEntity> administeredGroupChats;
 
-	@OneToMany(mappedBy="sender")
+	@OneToMany(mappedBy = "sender")
 	private List<MessageEntity> messages;
+
+	@ManyToMany(cascade = {CascadeType.DETACH}, fetch = FetchType.EAGER)
+	@JoinTable(name = "USERS_CONTACTS",
+			joinColumns = {@JoinColumn(name = "USER_ID")},
+			inverseJoinColumns = {@JoinColumn(name = "CONTACT_ID")})
+	private Set<UserEntity> contacts = new HashSet<>();
+
+	@ManyToMany(mappedBy = "contacts")
+	private Set<UserEntity> usersThatHaveMeAsContact = new HashSet<>();
 }

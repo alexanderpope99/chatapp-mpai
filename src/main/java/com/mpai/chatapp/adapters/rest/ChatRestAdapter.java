@@ -6,7 +6,6 @@ import com.mpai.chatapp.adapters.rest.data.request.GroupChatCreateRequest;
 import com.mpai.chatapp.adapters.rest.data.request.MessageRequest;
 import com.mpai.chatapp.adapters.rest.data.request.SimpleChatCreateRequest;
 import com.mpai.chatapp.adapters.rest.data.response.*;
-import com.mpai.chatapp.adapters.rest.mapper.ChatRestMapper;
 import com.mpai.chatapp.adapters.rest.mapper.GroupChatRestMapper;
 import com.mpai.chatapp.adapters.rest.mapper.MessageRestMapper;
 import com.mpai.chatapp.adapters.rest.mapper.SimpleChatRestMapper;
@@ -41,8 +40,6 @@ public class ChatRestAdapter {
 
 	private final GetChatForUserUseCase getChatForUserUseCase;
 
-	private final ChatRestMapper chatRestMapper;
-
 	private final SimpleChatRestMapper simpleChatRestMapper;
 
 	private final GroupChatRestMapper groupChatRestMapper;
@@ -69,44 +66,50 @@ public class ChatRestAdapter {
 	}
 
 	@PostMapping(value = "/simple")
-	public ResponseEntity<SimpleChatCreateResponse> createSimpleChat(@RequestHeader(name = "Authorization") String token,
+	public ResponseEntity<UserChatResponse> createSimpleChat(@RequestHeader(name = "Authorization") String token,
 																	 @RequestBody @Valid SimpleChatCreateRequest simpleChatCreateRequest) {
 
-		simpleChatCreateRequest.setInitialUsername(jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", "")));
+		String username = jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", ""));
+		simpleChatCreateRequest.setInitialUsername(username);
 
 		SimpleChat simpleChat = simpleChatRestMapper.toSimpleChat(simpleChatCreateRequest);
 
 		simpleChat = createChatUseCase.createSimpleChat(simpleChat);
+		UserChatResponseBuilderVisitorImpl visitor = new UserChatResponseBuilderVisitorImpl();
 
-		return new ResponseEntity<>(simpleChatRestMapper.toSimpleChatCreateResponse(simpleChat), HttpStatus.OK);
+		return new ResponseEntity<>(simpleChat.accept(visitor, username), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/group")
-	public ResponseEntity<GroupChatCreateResponse> createGroupChat(@RequestHeader(name = "Authorization") String token,
+	public ResponseEntity<UserChatResponse> createGroupChat(@RequestHeader(name = "Authorization") String token,
 																   @RequestBody @Valid GroupChatCreateRequest groupChatCreateRequest) {
 
-		groupChatCreateRequest.setAdmin(jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", "")));
+		String username = jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", ""));
+		groupChatCreateRequest.setAdmin(username);
 
 		GroupChat groupChat = groupChatRestMapper.toGroupChat(groupChatCreateRequest);
 
 		groupChat = createChatUseCase.createGroupChat(groupChat);
+		UserChatResponseBuilderVisitorImpl visitor = new UserChatResponseBuilderVisitorImpl();
 
-		return new ResponseEntity<>(groupChatRestMapper.toGroupChatCreateResponse(groupChat), HttpStatus.OK);
+		return new ResponseEntity<>(groupChat.accept(visitor, username), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/{id}/message")
-	public ResponseEntity<ChatResponse> sendMessageToChat(@RequestHeader(name = "Authorization") String token,
+	public ResponseEntity<UserChatResponse> sendMessageToChat(@RequestHeader(name = "Authorization") String token,
 														  @PathVariable UUID id,
 														  @RequestBody @Valid MessageRequest messageRequest) {
 
-		messageRequest.setUsername(jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", "")));
-		messageRequest.setDateTime(LocalDateTime.now());
+		String username = jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", ""));
+		messageRequest.setUsername(username);
+		messageRequest.setDate(LocalDateTime.now());
 
 		Message message = messageRestMapper.toMessage(messageRequest);
 
 		Chat chat = sendMessageUseCase.sendMessage(id, message);
+		UserChatResponseBuilderVisitorImpl visitor = new UserChatResponseBuilderVisitorImpl();
 
-		return new ResponseEntity<>(chatRestMapper.toChatResponse(chat), HttpStatus.OK);
+		return new ResponseEntity<>(chat.accept(visitor, username), HttpStatus.OK);
 	}
 
 	@PutMapping (value = "/group/{id}/add-users")

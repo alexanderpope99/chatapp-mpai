@@ -4,11 +4,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class UserChatResponse {
-	private UUID id;
+
+	protected UUID id;
+
+	protected Set<UserResponse> contacts;
+
+	protected List<MessageResponse> messages;
+
 }

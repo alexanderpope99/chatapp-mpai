@@ -2,9 +2,7 @@ package com.mpai.chatapp.domain.service;
 
 import com.mpai.chatapp.domain.model.Role;
 import com.mpai.chatapp.domain.model.User;
-import com.mpai.chatapp.ports.input.LoginUserUseCase;
-import com.mpai.chatapp.ports.input.RegisterUserUseCase;
-import com.mpai.chatapp.ports.input.UpdateUserUseCase;
+import com.mpai.chatapp.ports.input.*;
 import com.mpai.chatapp.ports.output.UserOutputPort;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,11 +11,18 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class UserService implements RegisterUserUseCase, LoginUserUseCase, UpdateUserUseCase {
+public class UserService implements
+		RegisterUserUseCase,
+		LoginUserUseCase,
+		UpdateUserUseCase,
+		FindUserByUsernameUseCase,
+		AddContactToUserUseCase,
+		GetContactsOfUserUseCase{
 
 	private final UserOutputPort userOutputPort;
 
@@ -64,6 +69,7 @@ public class UserService implements RegisterUserUseCase, LoginUserUseCase, Updat
 		return this.updateUser(foundUser.getId(), user);
 	}
 
+	@Override
 	public User findUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<User> user = userOutputPort.findByUsername(username);
 
@@ -73,4 +79,17 @@ public class UserService implements RegisterUserUseCase, LoginUserUseCase, Updat
 		return user.get();
 	}
 
+	@Override
+	public User addContactToUser(String username, String usernameToAdd) {
+		User user = findUserByUsername(username);
+		User userToAdd = findUserByUsername(usernameToAdd);
+
+		return userOutputPort.addContactToUser(user.getId(), userToAdd.getId());
+	}
+
+	@Override
+	public Set<User> getContactsOfUser(String username) {
+		User user = findUserByUsername(username);
+		return userOutputPort.getContactsOfUser(user.getId());
+	}
 }

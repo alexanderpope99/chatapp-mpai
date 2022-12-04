@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -15,7 +16,11 @@ public class UserResponse {
 
 	private String username;
 
-	private String nickname;
+	private String firstName;
 
-	private boolean isAdmin;
+	private String lastName;
+
+	private String lastSeen;
+
+	private String avatar;
 }
