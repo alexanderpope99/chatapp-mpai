@@ -17,10 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -38,6 +35,8 @@ public class UserRegisterRestAdapter {
 	private final UserRestMapper userRestMapper;
 
 	private final AuthenticationManager authenticationManager;
+
+	private final SSEEventManager sseEventManager;
 
 	private final JwtUtils jwtUtils;
 
@@ -67,6 +66,16 @@ public class UserRegisterRestAdapter {
 
 		return ResponseEntity.ok()
 				.body(userLoginResponse);
+	}
+
+	@GetMapping(value = "/logout")
+	public ResponseEntity<String> logout(@RequestHeader(name = "Authorization") String token) {
+
+		String username = jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", ""));
+
+		sseEventManager.unsubscribe(username);
+
+		return new ResponseEntity<>("User successfully logged out", HttpStatus.OK);
 	}
 
 }

@@ -4,10 +4,12 @@ import com.mpai.chatapp.domain.model.GroupChat;
 import com.mpai.chatapp.domain.model.Message;
 import com.mpai.chatapp.domain.model.SimpleChat;
 import com.mpai.chatapp.domain.model.User;
+import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Component
 public class UserChatResponseBuilderVisitorImpl implements UserChatResponseBuilderVisitor {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 

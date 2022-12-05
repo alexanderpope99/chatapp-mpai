@@ -7,8 +7,8 @@ import com.mpai.chatapp.adapters.rest.data.request.MessageRequest;
 import com.mpai.chatapp.adapters.rest.data.request.SimpleChatCreateRequest;
 import com.mpai.chatapp.adapters.rest.data.response.GroupChatCreateResponse;
 import com.mpai.chatapp.adapters.rest.data.response.UserChatResponse;
+import com.mpai.chatapp.adapters.rest.data.response.UserChatResponseBuilderVisitor;
 import com.mpai.chatapp.adapters.rest.data.response.UserChatResponseBuilderVisitorImpl;
-import com.mpai.chatapp.adapters.rest.data.response.UserResponse;
 import com.mpai.chatapp.adapters.rest.mapper.GroupChatRestMapper;
 import com.mpai.chatapp.adapters.rest.mapper.MessageRestMapper;
 import com.mpai.chatapp.adapters.rest.mapper.SimpleChatRestMapper;
@@ -24,10 +24,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping(value = "/chats")
@@ -52,7 +50,9 @@ public class ChatRestAdapter {
 
 	private final JwtUtils jwtUtils;
 
-	private Map<String, SseEmitter> sseEmitters = new ConcurrentHashMap<>();
+	private final UserChatResponseBuilderVisitor userChatResponseBuilderVisitor;
+
+	private final SSEEventManager sseEventManager;
 
 	@GetMapping
 	public ResponseEntity<Set<UserChatResponse>> getChats(@RequestHeader(name = "Authorization") String token) {
@@ -63,7 +63,7 @@ public class ChatRestAdapter {
 
 		Set<UserChatResponse> chatsResponse = new HashSet<>();
 
-		UserChatResponseBuilderVisitorImpl visitor = new UserChatResponseBuilderVisitorImpl();
+		UserChatResponseBuilderVisitor visitor = new UserChatResponseBuilderVisitorImpl();
 
 		for (Chat chat : chats)
 			chatsResponse.add(chat.accept(visitor, username));
@@ -81,9 +81,8 @@ public class ChatRestAdapter {
 		SimpleChat simpleChat = simpleChatRestMapper.toSimpleChat(simpleChatCreateRequest);
 
 		simpleChat = createChatUseCase.createSimpleChat(simpleChat);
-		UserChatResponseBuilderVisitorImpl visitor = new UserChatResponseBuilderVisitorImpl();
 
-		return new ResponseEntity<>(simpleChat.accept(visitor, username), HttpStatus.OK);
+		return new ResponseEntity<>(simpleChat.accept(userChatResponseBuilderVisitor, username), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/group")
@@ -96,9 +95,8 @@ public class ChatRestAdapter {
 		GroupChat groupChat = groupChatRestMapper.toGroupChat(groupChatCreateRequest);
 
 		groupChat = createChatUseCase.createGroupChat(groupChat);
-		UserChatResponseBuilderVisitorImpl visitor = new UserChatResponseBuilderVisitorImpl();
 
-		return new ResponseEntity<>(groupChat.accept(visitor, username), HttpStatus.OK);
+		return new ResponseEntity<>(groupChat.accept(userChatResponseBuilderVisitor, username), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/{id}/message")
@@ -114,25 +112,18 @@ public class ChatRestAdapter {
 		Message message = messageRestMapper.toMessage(messageRequest);
 
 		Chat chat = sendMessageUseCase.sendMessage(id, message);
-		UserChatResponseBuilderVisitorImpl visitor = new UserChatResponseBuilderVisitorImpl();
 
-		UserChatResponse userChatResponse = chat.accept(visitor, username);
+		UserChatResponse userChatResponse = chat.accept(userChatResponseBuilderVisitor, username);
 
-		for (UserResponse user : userChatResponse.getContacts()) {
-			SseEmitter sseEmitter = sseEmitters.get(user.getUsername());
-			if (sseEmitter != null)
-				sseEmitter.send(SseEmitter.event().name("ADDED_MESSAGE").data(message));
-		}
+		sseEventManager.notify("ADDED_MESSAGE", userChatResponse.getMessages().get(userChatResponse.getMessages().size() - 1));
+
 		return new ResponseEntity<>(userChatResponse, HttpStatus.OK);
 	}
 
-	@GetMapping("/register-sse")
+	@GetMapping("/subscribe")
 	public SseEmitter eventEmitter(@RequestHeader(name = "Authorization") String token) throws IOException {
 		String username = jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", ""));
-		SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
-		sseEmitters.put(username, sseEmitter);
-		sseEmitter.onCompletion(() -> sseEmitters.remove(username));
-		return sseEmitter;
+		return sseEventManager.subscribe(username);
 	}
 
 	@PutMapping(value = "/group/{id}/add-users")
