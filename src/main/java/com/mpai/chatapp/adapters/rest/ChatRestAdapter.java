@@ -1,19 +1,23 @@
 package com.mpai.chatapp.adapters.rest;
 
+import com.mpai.chatapp.adapters.CreateChatFacade;
 import com.mpai.chatapp.adapters.config.jwt.JwtUtils;
-import com.mpai.chatapp.adapters.rest.data.request.GroupChatCreateRequest;
+import com.mpai.chatapp.adapters.rest.data.request.ChatCreateRequest;
 import com.mpai.chatapp.adapters.rest.data.request.GroupChatUsersRequest;
 import com.mpai.chatapp.adapters.rest.data.request.MessageRequest;
-import com.mpai.chatapp.adapters.rest.data.request.SimpleChatCreateRequest;
 import com.mpai.chatapp.adapters.rest.data.response.GroupChatCreateResponse;
 import com.mpai.chatapp.adapters.rest.data.response.UserChatResponse;
 import com.mpai.chatapp.adapters.rest.data.response.UserChatResponseBuilderVisitor;
 import com.mpai.chatapp.adapters.rest.data.response.UserChatResponseBuilderVisitorImpl;
 import com.mpai.chatapp.adapters.rest.mapper.GroupChatRestMapper;
 import com.mpai.chatapp.adapters.rest.mapper.MessageRestMapper;
-import com.mpai.chatapp.adapters.rest.mapper.SimpleChatRestMapper;
-import com.mpai.chatapp.domain.model.*;
-import com.mpai.chatapp.ports.input.*;
+import com.mpai.chatapp.domain.model.Chat;
+import com.mpai.chatapp.domain.model.GroupChat;
+import com.mpai.chatapp.domain.model.Message;
+import com.mpai.chatapp.ports.input.AddUsersToGroupChatUseCase;
+import com.mpai.chatapp.ports.input.GetChatForUserUseCase;
+import com.mpai.chatapp.ports.input.RemoveUsersFromGroupChatUseCase;
+import com.mpai.chatapp.ports.input.SendMessageUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +36,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ChatRestAdapter {
 
-	private final CreateChatUseCase createChatUseCase;
-
 	private final AddUsersToGroupChatUseCase addUsersToGroupChatUseCase;
 
 	private final RemoveUsersFromGroupChatUseCase removeUsersFromGroupChatUseCase;
@@ -42,7 +44,7 @@ public class ChatRestAdapter {
 
 	private final GetChatForUserUseCase getChatForUserUseCase;
 
-	private final SimpleChatRestMapper simpleChatRestMapper;
+	private final CreateChatFacade createChatFacade;
 
 	private final GroupChatRestMapper groupChatRestMapper;
 
@@ -71,32 +73,17 @@ public class ChatRestAdapter {
 		return new ResponseEntity<>(chatsResponse, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/simple")
-	public ResponseEntity<UserChatResponse> createSimpleChat(@RequestHeader(name = "Authorization") String token,
-															 @RequestBody @Valid SimpleChatCreateRequest simpleChatCreateRequest) {
+	@PostMapping(value = "/{type}")
+	public ResponseEntity<UserChatResponse> createChat(@RequestHeader(name = "Authorization") String token,
+													   @PathVariable String type,
+													   @RequestBody @Valid ChatCreateRequest chatCreateRequest) {
 
 		String username = jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", ""));
-		simpleChatCreateRequest.setInitialUsername(username);
+		chatCreateRequest.setAdmin(username);
 
-		SimpleChat simpleChat = simpleChatRestMapper.toSimpleChat(simpleChatCreateRequest);
+		Chat chat = createChatFacade.createChat(type, chatCreateRequest);
 
-		simpleChat = createChatUseCase.createSimpleChat(simpleChat);
-
-		return new ResponseEntity<>(simpleChat.accept(userChatResponseBuilderVisitor, username), HttpStatus.OK);
-	}
-
-	@PostMapping(value = "/group")
-	public ResponseEntity<UserChatResponse> createGroupChat(@RequestHeader(name = "Authorization") String token,
-															@RequestBody @Valid GroupChatCreateRequest groupChatCreateRequest) {
-
-		String username = jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", ""));
-		groupChatCreateRequest.setAdmin(username);
-
-		GroupChat groupChat = groupChatRestMapper.toGroupChat(groupChatCreateRequest);
-
-		groupChat = createChatUseCase.createGroupChat(groupChat);
-
-		return new ResponseEntity<>(groupChat.accept(userChatResponseBuilderVisitor, username), HttpStatus.OK);
+		return new ResponseEntity<>(chat.accept(userChatResponseBuilderVisitor, username), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/{id}/message")

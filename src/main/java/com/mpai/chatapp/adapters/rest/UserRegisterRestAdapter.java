@@ -50,7 +50,7 @@ public class UserRegisterRestAdapter {
 	}
 
 	@PostMapping(value = "/login")
-	public ResponseEntity<UserLoginResponse> loginUser(@RequestBody @Valid UserLoginRequest userLoginRequest, final HttpServletRequest request) {
+	public ResponseEntity<UserLoginResponse> loginUser(@RequestBody @Valid UserLoginRequest userLoginRequest) {
 		User user = userRestMapper.toUser(userLoginRequest);
 
 		Authentication authentication = authenticationManager.authenticate(

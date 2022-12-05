@@ -2,7 +2,7 @@ package com.mpai.chatapp.adapters.rest.mapper;
 
 import com.mpai.chatapp.adapters.rest.data.request.GroupChatUsers;
 import com.mpai.chatapp.adapters.rest.data.request.GroupChatUsersRequest;
-import com.mpai.chatapp.adapters.rest.data.request.GroupChatCreateRequest;
+import com.mpai.chatapp.adapters.rest.data.request.ChatCreateRequest;
 import com.mpai.chatapp.adapters.rest.data.response.GroupChatCreateResponse;
 import com.mpai.chatapp.domain.model.GroupChat;
 import com.mpai.chatapp.domain.service.UserService;
@@ -13,7 +13,7 @@ import org.mapstruct.Mapping;
 public interface GroupChatRestMapper {
 
 	@Mapping(source = "usernames", target = "users")
-	GroupChat toGroupChat(GroupChatCreateRequest groupChatCreateRequest);
+	GroupChat toGroupChat(ChatCreateRequest chatCreateRequest);
 
 	GroupChatCreateResponse toGroupChatCreateResponse(GroupChat groupChat);
 

@@ -4,6 +4,7 @@ import com.mpai.chatapp.adapters.rest.data.response.UserChatResponse;
 import com.mpai.chatapp.adapters.rest.data.response.UserChatResponseBuilderVisitor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class SimpleChat extends Chat {
 

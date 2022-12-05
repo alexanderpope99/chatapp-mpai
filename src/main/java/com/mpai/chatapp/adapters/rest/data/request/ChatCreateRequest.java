@@ -13,15 +13,13 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupChatCreateRequest {
+public class ChatCreateRequest {
 
-	@NotEmpty(message = "Name is mandatory")
 	private String name;
 
 	private String admin;
 
 	@NotEmpty(message = "A List of users is mandatory")
-	@Size(min = 2, message = "Minimum two users are required")
 	private Set<String> usernames;
 
 }
