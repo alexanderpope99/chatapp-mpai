@@ -27,9 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/chats")
@@ -57,13 +55,13 @@ public class ChatRestAdapter {
 	private final SSEEventManager sseEventManager;
 
 	@GetMapping
-	public ResponseEntity<Set<UserChatResponse>> getChats(@RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<List<UserChatResponse>> getChats(@RequestHeader(name = "Authorization") String token) {
 
 		String username = jwtUtils.getUserNameFromJwtToken(token.replace("Bearer ", ""));
 
-		Set<Chat> chats = getChatForUserUseCase.getChatsForUser(username);
+		List<Chat> chats = getChatForUserUseCase.getChatsForUser(username);
 
-		Set<UserChatResponse> chatsResponse = new HashSet<>();
+		List<UserChatResponse> chatsResponse = new ArrayList<>();
 
 		UserChatResponseBuilderVisitor visitor = new UserChatResponseBuilderVisitorImpl();
 

@@ -6,9 +6,7 @@ import com.mpai.chatapp.ports.output.ChatOutputPort;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -76,11 +74,15 @@ public class ChatService implements
 	}
 
 	@Override
-	public Set<Chat> getChatsForUser(String username) {
+	public List<Chat> getChatsForUser(String username) {
 		Set<Chat> chats = new HashSet<>();
 		chats.addAll(chatOutputPort.getChatsForUser(username));
 		chats.addAll(chatOutputPort.getAdministeredChatsForUser(username));
 
-		return chats;
+		List<Chat> sortedChats = new ArrayList<>(chats);
+
+		sortedChats.sort(Collections.reverseOrder());
+
+		return sortedChats;
 	}
 }

@@ -2,10 +2,10 @@ package com.mpai.chatapp.ports.input;
 
 import com.mpai.chatapp.domain.model.Chat;
 
-import java.util.Set;
+import java.util.List;
 
 public interface GetChatForUserUseCase {
 
-	Set<Chat> getChatsForUser(String username);
+	List<Chat> getChatsForUser(String username);
 
 }
